@@ -4,21 +4,30 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace ORM_Dapper
 {
     public class DapperDepartmentRepository : IDepartmentRepository
     {
-        private readonly IDbConnection _connection;
+        private readonly IDbConnection _conn;
         //Constructor
-        public DapperDepartmentRepository(IDbConnection connection)
+        public DapperDepartmentRepository(IDbConnection conn)
         {
-            _connection = connection;
+            _conn = conn;
         }
 
         public IEnumerable<Department> GetAllDepartments()
         {
-            throw new NotImplementedException();
+            return _conn.Query<Department>("SELECT * FROM Departments;");
         }
+
+        public void InsertDepartment(string name)
+        {
+            _conn.Execute("INSERT INTO DEPARTMENTS (Name) VALUES (@departmentName);",
+        new { departmentName = name });
+        }
+
+             
     }
 }
